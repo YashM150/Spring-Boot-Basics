@@ -1,20 +1,24 @@
 package com.matthe.ecom.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "Users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+    @Column(unique = true)
     private String username;
     private String password;
-    private String role;
+
+//    @Setter
+//    @Getter
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    private Set<String> roles; // A set of roles like ["ROLE_USER", "ROLE_ADMIN"]
+
 }

@@ -16,10 +16,44 @@ const Login = ({ setAuthenticated }) => {
   };
 
   return (
-    <div>
-      <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+    <div className="container">
+    <div className="center-container" style={{border: '2px solid black',padding:'2rem',borderRadius:' 1rem'}}>
+      <form className="row g-5 pt-5" onSubmit={handleLogin}>
+        <div className="col-md-12">
+          <label className="form-label">
+            <h6>Username</h6>
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Enter Username"
+            onChange={(e) => setUsername(e.target.value)}
+            name="name"
+          />
+        </div>
+        <div className="col-md-12">
+          <label className="form-label">
+            <h6>Password</h6>
+          </label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Enter your password"
+            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+          />
+        </div>
+        <div className="col-12">
+          <button
+            type="submit"
+            className="btn btn-primary"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
     </div>
   );
 };
