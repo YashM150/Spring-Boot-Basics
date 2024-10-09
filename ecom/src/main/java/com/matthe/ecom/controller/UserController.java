@@ -16,10 +16,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register/user")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            User user1 = userService.registerUser(user);
+            User user1 = userService.registerUser(user,"ROLE_USER", null);
+            return new ResponseEntity<>(user1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<?> registerAdmin(@RequestBody User user,@RequestParam String code) {
+        try {
+            User user1 = userService.registerUser(user,"ROLE_ADMIN",code);
             return new ResponseEntity<>(user1, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

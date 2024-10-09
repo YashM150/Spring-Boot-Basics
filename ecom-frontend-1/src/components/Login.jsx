@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-const Login = ({}) => {
+import { Link } from "react-router-dom";
+
+const Login = ({isAuthenticated}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,6 +21,7 @@ const Login = ({}) => {
     if (response.ok) {
       const message = await response.text();
       alert(message);
+      isAuthenticated=true;
       window.location.href = '/';  // Redirect to /api/
     } else {
       console.log("Username:",username);
@@ -32,6 +34,11 @@ const Login = ({}) => {
     <div className="container">
     <div className="center-container" style={{border: '2px solid black',padding:'2rem',borderRadius:' 1rem'}}>
       <form className="row g-5 pt-5" onSubmit={handleLogin}>
+        <div className="col-md-12">
+          <label className="form-label">
+            <h3>Login</h3>
+          </label>
+        </div>
         <div className="col-md-12">
           <label className="form-label">
             <h6>Username</h6>
@@ -56,6 +63,9 @@ const Login = ({}) => {
             onChange={(e) => setPassword(e.target.value)}
             id="password"
           />
+        </div>
+        <div className="col-md-12">
+          <div className="form-label">If not have a account register <Link to="/register">here</Link> !</div>
         </div>
         <div className="col-12">
           <button

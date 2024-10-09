@@ -6,6 +6,9 @@ import Cart from "./components/Cart";
 import AddProduct from "./components/AddProduct";
 import Product from "./components/Product";
 import Login from "./components/Login";
+import User from "./components/UserRegister";
+import Admin from "./components/AdminRegister";
+import Register from "./components/Register";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./Context/Context";
 import UpdateProduct from "./components/UpdateProduct";
@@ -57,6 +60,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/product/update/:id" element={<UpdateProduct />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/register" element={<Register/>} />
         </Routes>
       </BrowserRouter>
     </AppProvider>

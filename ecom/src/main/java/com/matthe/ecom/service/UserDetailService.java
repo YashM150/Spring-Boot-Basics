@@ -2,6 +2,7 @@ package com.matthe.ecom.service;
 
 import com.matthe.ecom.model.User;
 import com.matthe.ecom.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,16 @@ public class UserDetailService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    @Value("${admin.registration.code}") // Load the admin registration code from properties
+    private String adminCode;
+
+    public User registerUser(User user,String role, String code) {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser == null) {
-            // Encode the password before saving
+            if ("ROLE_ADMIN".equals(role) && !adminCode.equals(code)) {
+                throw new RuntimeException("Invalid admin registration code");
+            }
+            user.setRole(role);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         } else {

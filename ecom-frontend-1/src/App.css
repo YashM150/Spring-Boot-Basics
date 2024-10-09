@@ -1179,3 +1179,10 @@ font-size: 14px;
   height: 1px;
   background: var(--hr_line_card)
 }
+.login{
+  background-color: rgb(196, 236, 18);
+  text-decoration-style: none;
+  font-weight: bold;
+  padding: 0.5em;
+  border-radius: 10px;
+}

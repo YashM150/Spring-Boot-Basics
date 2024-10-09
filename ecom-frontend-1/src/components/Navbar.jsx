@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Home from "./Home"
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -193,11 +192,11 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   </ul>
                 )}
                 <div />
-                <div>
+                <div className="login">
                   {isAuthenticated ? (
                     <button onClick={handleLogout}>Logout</button>
                   ) : (
-                    <Link to="/login">
+                    <Link to="/login" style={{textDecoration: "none",color:"white"}}>
                     Login
                     </Link>
                   )}

@@ -1,5 +1,6 @@
 package com.matthe.ecom.config;
 
+import jakarta.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,11 +27,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/products").permitAll()
 //                        .requestMatchers("/api/products").permitAll()
                         .anyRequest().authenticated()                          // Secure all other endpoints
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Stateless session
+                );
+//                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Add your custom filter
+             
 
         return http.build();
     }
+
+//    @Bean
+//    public CustomAuthenticationFilter customAuthenticationFilter() {
+//        return new CustomAuthenticationFilter();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
