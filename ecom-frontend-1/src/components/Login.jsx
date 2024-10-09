@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Login = ({ setAuthenticated }) => {
+const Login = ({}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/auth/login", { username, password });
-      localStorage.setItem("token", response.data.jwt);
-      setAuthenticated(true);
-    } catch (error) {
-      console.error("Login failed", error);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("Username:",username);
+    console.log("Password:",password);
+    const response = await fetch('http://localhost:8080/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+  
+    if (response.ok) {
+      const message = await response.text();
+      alert(message);
+      window.location.href = '/';  // Redirect to /api/
+    } else {
+      console.log("Username:",username);
+      console.log("Password:",password);
+      alert('Invalid credentials');
     }
   };
 

@@ -16,9 +16,4 @@ public class User {
     private String username;
     private String password;
 
-//    @Setter
-//    @Getter
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    private Set<String> roles; // A set of roles like ["ROLE_USER", "ROLE_ADMIN"]
-
 }

@@ -11,31 +11,35 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserDetailService userService;
+
     public UserController(UserDetailService userService) {
         this.userService = userService;
     }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        try{
+        try {
             User user1 = userService.registerUser(user);
-            return  new ResponseEntity<>(user1, HttpStatus.CREATED);
-        }
-        catch(Exception e){
-            return  new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(user1, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        // Perform authentication logic
-        // Return appropriate response or token
-        return ResponseEntity.ok("Login successful");
+        boolean authenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
+        if (authenticated) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
     }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
         // Perform logout logic
-        // Invalidate token or session
         return ResponseEntity.ok("Logout successful");
     }
-
-
 }
