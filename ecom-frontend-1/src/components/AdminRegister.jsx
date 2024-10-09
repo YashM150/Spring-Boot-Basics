@@ -4,11 +4,27 @@ import axios from "axios";
 const AdminRegister = ({}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [code, setCode] = useState("");
 
   const handleRegistraition = async (e) => {
+
     e.preventDefault();
-    
+    console.log("Username:",username);
+    console.log("Password:",password);
+    const response = await fetch('http://localhost:8080/api/register/admin?code=${code}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }),
+    });
+  
+    if (response.ok) {
+      const message = await response.text();
+      alert(message);
+    } else {
+      alert('User not Entered!');
+    }
   };
 
   return (
@@ -43,6 +59,19 @@ const AdminRegister = ({}) => {
             placeholder="Enter your password"
             onChange={(e) => setPassword(e.target.value)}
             id="password"
+          />
+        </div>
+        <div className="col-md-12">
+          <label className="form-label">
+            <h6>Code</h6>
+          </label>
+          <input
+            type="code"
+            name="code"
+            className="form-control"
+            placeholder="Enter your code"
+            onChange={(e) => setCode(e.target.value)}
+            id="code"
           />
         </div>
         <div className="col-12">

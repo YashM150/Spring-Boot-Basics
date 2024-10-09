@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/register/admin")
-    public ResponseEntity<?> registerAdmin(@RequestBody User user,@RequestParam String code) {
+    public ResponseEntity<?> registerAdmin(@RequestBody User user,@RequestParam("code") String code) {
         try {
             User user1 = userService.registerUser(user,"ROLE_ADMIN",code);
             return new ResponseEntity<>(user1, HttpStatus.CREATED);
