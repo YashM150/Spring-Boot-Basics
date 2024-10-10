@@ -23,9 +23,12 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/register").permitAll()  // Allow registration
+                        .requestMatchers("/api/auth/register/user").permitAll()  // Allow User registration
+                        .requestMatchers("/api/auth/register/admin").permitAll()  // Allow User registration
                         .requestMatchers("/api/auth/login").permitAll()     // Allow login
                         .requestMatchers("/api/products").permitAll()
-//                        .requestMatchers("/api/products").permitAll()
+//                        .requestMatchers("/api/products/{id}/image").permitAll()
+//                        .requestMatchers("/api/products/{id}").permitAll()
                         .anyRequest().authenticated()                          // Secure all other endpoints
                 );
 //                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Add your custom filter

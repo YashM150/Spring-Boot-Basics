@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+
 
 const UserRegister = ({}) => {
   const [username, setUsername] = useState("");
@@ -10,7 +10,7 @@ const UserRegister = ({}) => {
     e.preventDefault();
     console.log("Username:",username);
     console.log("Password:",password);
-    const response = await fetch('http://localhost:8080/api/register/user', {
+    const response = await fetch('http://localhost:8080/api/auth/register/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -21,6 +21,7 @@ const UserRegister = ({}) => {
     if (response.ok) {
       const message = await response.text();
       alert(message);
+      window.location.href = '/login'; 
     } else {
       alert('User not Entered!');
     }

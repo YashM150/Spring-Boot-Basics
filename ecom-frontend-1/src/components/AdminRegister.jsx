@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+
 
 const AdminRegister = ({}) => {
   const [username, setUsername] = useState("");
@@ -11,7 +11,7 @@ const AdminRegister = ({}) => {
     e.preventDefault();
     console.log("Username:",username);
     console.log("Password:",password);
-    const response = await fetch('http://localhost:8080/api/register/admin?code=${code}', {
+    const response = await fetch(`http://localhost:8080/api/auth/register/admin?code=${code}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,8 +22,9 @@ const AdminRegister = ({}) => {
     if (response.ok) {
       const message = await response.text();
       alert(message);
+      window.location.href = '/login'; 
     } else {
-      alert('User not Entered!');
+      alert('Admin not Entered!');
     }
   };
 

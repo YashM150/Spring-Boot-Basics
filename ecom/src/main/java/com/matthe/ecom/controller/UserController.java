@@ -20,7 +20,7 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User user1 = userService.registerUser(user,"ROLE_USER", null);
-            return new ResponseEntity<>(user1, HttpStatus.CREATED);
+            return new ResponseEntity<>(user1, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<?> registerAdmin(@RequestBody User user,@RequestParam("code") String code) {
         try {
             User user1 = userService.registerUser(user,"ROLE_ADMIN",code);
-            return new ResponseEntity<>(user1, HttpStatus.CREATED);
+            return new ResponseEntity<>(user1, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
