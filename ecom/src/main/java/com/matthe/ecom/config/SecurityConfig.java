@@ -26,12 +26,17 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register/user").permitAll()  // Allow User registration
                         .requestMatchers("/api/auth/register/admin").permitAll()  // Allow User registration
                         .requestMatchers("/api/auth/login").permitAll()     // Allow login
+                        .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/api/products").permitAll()
-//                        .requestMatchers("/api/products/{id}/image").permitAll()
-//                        .requestMatchers("/api/products/{id}").permitAll()
+                        .requestMatchers("/api/auth/session").permitAll()
+                        .requestMatchers("/api/products/{id}").permitAll()
+                        .requestMatchers("/api/products/{id}/image").permitAll()
                         .anyRequest().authenticated()                          // Secure all other endpoints
-                );
-//                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Add your custom filter
+                )
+                .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Create a session if required
+                .invalidSessionUrl("/api/auth/login")  // Redirect to login if session is invalid
+            );
              
 
         return http.build();

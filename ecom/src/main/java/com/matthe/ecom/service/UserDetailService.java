@@ -41,4 +41,18 @@ public class UserDetailService {
         }
         return false; // Authentication failed
     }
+
+    public String setuserStatus(String status, String username) {
+        userRepository.updateStatusByUsername(status, username);
+        return username;
+    }
+
+    public String checkSession(String username) {
+        User user= userRepository.findByUsername(username);
+        return user.getStatus();
+    }
+
+    public User getUser(String username) {
+        return userRepository.findByUsername(username);
+    }
 }

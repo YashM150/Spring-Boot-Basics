@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
@@ -38,18 +40,47 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
+        String Status="LoggedIn";
         boolean authenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
         if (authenticated) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Login successful");
+            String userStatus = userService.setuserStatus(Status, user.getUsername());
+            if(userStatus != null)
+                return new ResponseEntity<>(userStatus, HttpStatus.OK);
+            else{
+                return new ResponseEntity<>(userStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout(@RequestParam("User") String username) {
         // Perform logout logic
-        return ResponseEntity.ok("Logout successful");
+        String session= userService.checkSession(username);
+        User user1=userService.getUser(username);
+        String userStatus;
+        if(Objects.equals(session, "LoggedIn"))
+        {
+            userStatus=userService.setuserStatus("LoggedOut",username);
+            String session1= userService.checkSession(username);
+            if (Objects.equals(session1, "LoggedOut"))
+                return ResponseEntity.ok().build(); // Session exists
+            else
+                return ResponseEntity.internalServerError().build();
+
+        }
+        else{
+            return ResponseEntity.internalServerError().build();
+        }
     }
+//    @GetMapping("/session")
+//    public ResponseEntity<?> checkSession() {
+//        String session= userService.checkSession();
+//        if(Objects.equals(session, "LoggedIn"))
+//            return ResponseEntity.ok().build(); // Session exists
+//        else{
+//            return ResponseEntity.internalServerError().build();
+//        }
+//    }
 }

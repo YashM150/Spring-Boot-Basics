@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-
 import { Link } from "react-router-dom";
 
-const Login = ({isAuthenticated}) => {
+const Login = ({setAuthenticated}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,13 +15,16 @@ const Login = ({isAuthenticated}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username, password }),
+      credentials: 'include',
     });
   
-    if (response.ok) {
+    if (response.status==200) {
       const message = await response.text();
       alert(message);
-      isAuthenticated=true;
+      // setAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true"); 
       window.location.href = '/';  // Redirect to /api/
+      
     } else {
       console.log("Username:",username);
       console.log("Password:",password);

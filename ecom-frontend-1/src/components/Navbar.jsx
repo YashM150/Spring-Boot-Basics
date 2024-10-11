@@ -20,6 +20,14 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    
+    const authStatus = localStorage.getItem("isAuthenticated");
+    if (authStatus === "true") {
+      setAuthenticated(true);
+    }
+  }, []);
+
   const fetchData = async (value) => {
     try {
       const response = await axios.get("http://localhost:8080/api/products");
@@ -73,14 +81,20 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     "Toys",
     "Fashion",
   ];
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setAuthenticated(!!token);
-  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setAuthenticated(false);
+  const handleLogout = async () => {
+      const response = await fetch('http://localhost:8080/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',  // Include session cookie for logout
+      });
+    
+      if (response.ok) {
+      setAuthenticated(false);
+      localStorage.removeItem("isAuthenticated");
+        alert('Logged out successfully');
+        window.location.href = '/login';  // Redirect to login page
+      }
+    
   };
 
   return (
