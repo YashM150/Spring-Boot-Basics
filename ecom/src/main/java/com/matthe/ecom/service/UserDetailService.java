@@ -55,4 +55,15 @@ public class UserDetailService {
     public User getUser(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public boolean isAdmin(String username) {
+        User user = userRepository.findByUsername(username);
+        String role = user.getRole();
+        if("ROLE_ADMIN".equals(role)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

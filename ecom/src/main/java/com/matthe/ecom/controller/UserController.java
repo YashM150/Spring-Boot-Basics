@@ -94,4 +94,13 @@ public class UserController {
                 return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> checkUser(@RequestParam("User") String username) {
+        boolean User=userService.isAdmin(username);
+        if(User==true)
+            return new ResponseEntity<>(username, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(username, HttpStatus.FORBIDDEN);
+    }
 }

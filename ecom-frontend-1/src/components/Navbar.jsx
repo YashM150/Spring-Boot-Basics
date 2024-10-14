@@ -15,6 +15,7 @@ const Navbar = ({ onSelectCategory }) => {
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const [isAdmin, setAdmin] = useState(false);
   const [username, setUsername] = useState(""); // For storing the username
   const [showSearchResults, setShowSearchResults] = useState(false);
 
@@ -29,10 +30,11 @@ const Navbar = ({ onSelectCategory }) => {
     if (authStatus === "true" && storedUsername) {
       setAuthenticated(true);
       setUsername(storedUsername); // Set the username from localStorage
+      checkAdminStatus(storedUsername); // Call the function to check admin status
     }
   }, []);
 
-  const fetchData = async (value) => {
+  const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/products");
       setSearchResults(response.data);
@@ -80,24 +82,42 @@ const Navbar = ({ onSelectCategory }) => {
 
   const categories = ["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"];
 
+  // Function to check if the user is an admin
+  const checkAdminStatus = async (username) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/auth/user?User=${username}`
+      );
+      if (response.status === 200 && response.data === "Admin2") {
+        setAdmin(true);
+        localStorage.setItem("isAdmin", "true"); // Store admin status in local storage
+      }
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+    }
+  };
+
   const handleLogout = async () => {
-    
-    const response = await fetch(`http://localhost:8080/api/auth/logout?User=${username}`, {
-      method: 'POST',
-      credentials: 'include',  // Include session cookie for logout
-    });
+    const response = await fetch(
+      `http://localhost:8080/api/auth/logout?User=${username}`,
+      {
+        method: "POST",
+        credentials: "include", // Include session cookie for logout
+      }
+    );
 
     if (response.ok) {
-      const sessionResponse = await axios.get(`http://localhost:8080/api/auth/session?User=${username}`);
-      if (sessionResponse.data=="LoggedOut")
-      {
+      const sessionResponse = await axios.get(
+        `http://localhost:8080/api/auth/session?User=${username}`
+      );
+      if (sessionResponse.data === "LoggedOut") {
         setAuthenticated(false);
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("User"); // Remove the username
-        alert('Logged out successfully');
-        window.location.href = '/login';  // Redirect to login page
+        localStorage.removeItem("isAdmin"); // Remove the admin status
+        alert("Logged out successfully");
+        window.location.href = "/login"; // Redirect to login page
       }
-      
     }
   };
 
@@ -130,12 +150,13 @@ const Navbar = ({ onSelectCategory }) => {
                     Home
                   </a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="/add_product">
-                    Add Product
-                  </a>
-                </li>
-
+                {isAdmin && (
+                  <li className="nav-item">
+                    <a className="nav-link" href="/add_product">
+                      Add Product
+                    </a>
+                  </li>
+                )}
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
@@ -191,14 +212,17 @@ const Navbar = ({ onSelectCategory }) => {
                 />
                 {showSearchResults && (
                   <ul className="list-group">
-                    {searchResults.length > 0 ? (  
-                        searchResults.map((result) => (
-                          <li key={result.id} className="list-group-item">
-                            <a href={`/product/${result.id}`} className="search-result-link">
+                    {searchResults.length > 0 ? (
+                      searchResults.map((result) => (
+                        <li key={result.id} className="list-group-item">
+                          <a
+                            href={`/product/${result.id}`}
+                            className="search-result-link"
+                          >
                             <span>{result.name}</span>
-                            </a>
-                          </li>
-                        ))
+                          </a>
+                        </li>
+                      ))
                     ) : (
                       noResults && (
                         <p className="no-results-message">
@@ -212,11 +236,15 @@ const Navbar = ({ onSelectCategory }) => {
                 <div className="login">
                   {isAuthenticated ? (
                     <>
-                      <span className="me-2">Welcome, {username}</span> {/* Display the username */}
+                      <span className="me-2">Welcome, {username}</span>{" "}
+                      {/* Display the username */}
                       <button onClick={handleLogout}>Logout</button>
                     </>
                   ) : (
-                    <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
+                    <Link
+                      to="/login"
+                      style={{ textDecoration: "none", color: "white" }}
+                    >
                       Login
                     </Link>
                   )}

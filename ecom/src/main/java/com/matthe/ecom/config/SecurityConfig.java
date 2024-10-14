@@ -27,10 +27,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register/admin").permitAll()  // Allow User registration
                         .requestMatchers("/api/auth/login").permitAll()     // Allow login
                         .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/api/auth/user").permitAll()
                         .requestMatchers("/api/products").permitAll()
                         .requestMatchers("/api/auth/session").permitAll()
-                        .requestMatchers("/api/products/{id}").permitAll()
-                        .requestMatchers("/api/products/{id}/image").permitAll()
+                        .requestMatchers("/api/product/*").permitAll()
+                        .requestMatchers("/api/product/*/image").permitAll()
                         .anyRequest().authenticated()                          // Secure all other endpoints
                 )
                 .sessionManagement(session -> session

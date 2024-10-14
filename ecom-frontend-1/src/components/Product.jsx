@@ -127,42 +127,45 @@ const Product = () => {
                 {product.stockQuantity}
               </i>
             </h6>
-          
           </div>
+          
           <div className="update-button" style={{ display: "flex", gap: "1rem" }}>
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={handleEditClick}
-              style={{
-                padding: "1rem 2rem",
-                fontSize: "1rem",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Update
-            </button>
-            {/* <UpdateProduct product={product} onUpdate={handleUpdate} /> */}
-            <button
-              className="btn btn-primary"
-              type="button"
-              onClick={deleteProduct}
-              style={{
-                padding: "1rem 2rem",
-                fontSize: "1rem",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
+            {localStorage.getItem("isAdmin") === "true" && (
+              <>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={handleEditClick}
+                  style={{
+                    padding: "1rem 2rem",
+                    fontSize: "1rem",
+                    backgroundColor: "#007bff",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Update
+                </button>
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={deleteProduct}
+                  style={{
+                    padding: "1rem 2rem",
+                    fontSize: "1rem",
+                    backgroundColor: "#dc3545",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
