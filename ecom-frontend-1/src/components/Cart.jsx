@@ -13,6 +13,7 @@ const Cart = () => {
 
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
+      
       console.log("Cart", cart);
       try {
         const response = await axios.get("http://localhost:8080/api/products");
@@ -93,7 +94,8 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-          const sessionResponse = await axios.get("http://localhost:8080/api/auth/session");
+          const storedUsername = localStorage.getItem("User");
+          const sessionResponse = await axios.get(`http://localhost:8080/api/auth/session?User=${storedUsername}`);
           console.log(sessionResponse.status); 
           if (sessionResponse.status == 200)
           {

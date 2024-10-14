@@ -56,31 +56,42 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestParam("User") String username) {
-        // Perform logout logic
-        String session= userService.checkSession(username);
-        User user1=userService.getUser(username);
-        String userStatus;
-        if(Objects.equals(session, "LoggedIn"))
-        {
-            userStatus=userService.setuserStatus("LoggedOut",username);
-            String session1= userService.checkSession(username);
-            if (Objects.equals(session1, "LoggedOut"))
-                return ResponseEntity.ok().build(); // Session exists
-            else
-                return ResponseEntity.internalServerError().build();
+        try {
+            // Check the current session status
+            String session = userService.checkSession(username);
 
-        }
-        else{
-            return ResponseEntity.internalServerError().build();
+            if (!Objects.equals(session, "LoggedIn")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not logged in.");
+            }
+
+            // Set the user status to LoggedOut
+            String userStatus = userService.setuserStatus("LoggedOut", username);
+
+//            // Check the updated session status
+//            String log = userService.checkSession(userStatus);
+//            if (Objects.equals(log, "LoggedOut")) {
+                return ResponseEntity.ok("User successfully logged out.");
+//            } else {
+//                return ResponseEntity.internalServerError().body("Failed to log out the user.");
+//            }
+
+        } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during logout.");
         }
     }
-//    @GetMapping("/session")
-//    public ResponseEntity<?> checkSession() {
-//        String session= userService.checkSession();
-//        if(Objects.equals(session, "LoggedIn"))
-//            return ResponseEntity.ok().build(); // Session exists
-//        else{
-//            return ResponseEntity.internalServerError().build();
-//        }
-//    }
+
+    @GetMapping("/session")
+    public ResponseEntity<?> checkSession(@RequestParam("User") String username) {
+        String session= userService.checkSession(username);
+        if(Objects.equals(session, "LoggedIn"))
+            return new ResponseEntity<>(session, HttpStatus.OK);// Session exists
+        else{
+            if(Objects.equals(session, "LoggedOut"))
+                return new ResponseEntity<>(session, HttpStatus.OK);
+            else
+                return ResponseEntity.internalServerError().build();
+        }
+    }
 }

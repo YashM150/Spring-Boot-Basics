@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-
-const Navbar = ({ onSelectCategory, onSearch }) => {
+const Navbar = ({ onSelectCategory }) => {
   const getInitialTheme = () => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme ? storedTheme : "light-theme";
   };
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [theme, setTheme] = useState(getInitialTheme());
   const [input, setInput] = useState("");
@@ -15,16 +15,20 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const [showSearchResults,setShowSearchResults] = useState(false)
+  const [username, setUsername] = useState(""); // For storing the username
+  const [showSearchResults, setShowSearchResults] = useState(false);
+
   useEffect(() => {
     fetchData();
   }, []);
 
   useEffect(() => {
-    
+    // Check if user is authenticated and retrieve the username
     const authStatus = localStorage.getItem("isAuthenticated");
-    if (authStatus === "true") {
+    const storedUsername = localStorage.getItem("User");
+    if (authStatus === "true" && storedUsername) {
       setAuthenticated(true);
+      setUsername(storedUsername); // Set the username from localStorage
     }
   }, []);
 
@@ -41,17 +45,17 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const handleChange = async (value) => {
     setInput(value);
     if (value.length >= 1) {
-      setShowSearchResults(true)
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/api/products/search?keyword=${value}`
-      );
-      setSearchResults(response.data);
-      setNoResults(response.data.length === 0);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error searching:", error);
-    }
+      setShowSearchResults(true);
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/products/search?keyword=${value}`
+        );
+        setSearchResults(response.data);
+        setNoResults(response.data.length === 0);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error searching:", error);
+      }
     } else {
       setShowSearchResults(false);
       setSearchResults([]);
@@ -63,6 +67,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     setSelectedCategory(category);
     onSelectCategory(category);
   };
+
   const toggleTheme = () => {
     const newTheme = theme === "dark-theme" ? "light-theme" : "dark-theme";
     setTheme(newTheme);
@@ -73,28 +78,27 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     document.body.className = theme;
   }, [theme]);
 
-  const categories = [
-    "Laptop",
-    "Headphone",
-    "Mobile",
-    "Electronics",
-    "Toys",
-    "Fashion",
-  ];
+  const categories = ["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"];
 
   const handleLogout = async () => {
-      const response = await fetch('http://localhost:8080/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',  // Include session cookie for logout
-      });
     
-      if (response.ok) {
-      setAuthenticated(false);
-      localStorage.removeItem("isAuthenticated");
+    const response = await fetch(`http://localhost:8080/api/auth/logout?User=${username}`, {
+      method: 'POST',
+      credentials: 'include',  // Include session cookie for logout
+    });
+
+    if (response.ok) {
+      const sessionResponse = await axios.get(`http://localhost:8080/api/auth/session?User=${username}`);
+      if (sessionResponse.data=="LoggedOut")
+      {
+        setAuthenticated(false);
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("User"); // Remove the username
         alert('Logged out successfully');
         window.location.href = '/login';  // Redirect to login page
       }
-    
+      
+    }
   };
 
   return (
@@ -175,7 +179,6 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                     Cart
                   </i>
                 </a>
-                {/* <form className="d-flex" role="search" onSubmit={handleSearch} id="searchForm"> */}
                 <input
                   className="form-control me-2"
                   type="search"
@@ -199,7 +202,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                     ) : (
                       noResults && (
                         <p className="no-results-message">
-                          No Prouduct with such Name
+                          No Product with such Name
                         </p>
                       )
                     )}
@@ -208,14 +211,16 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                 <div />
                 <div className="login">
                   {isAuthenticated ? (
-                    <button onClick={handleLogout}>Logout</button>
+                    <>
+                      <span className="me-2">Welcome, {username}</span> {/* Display the username */}
+                      <button onClick={handleLogout}>Logout</button>
+                    </>
                   ) : (
-                    <Link to="/login" style={{textDecoration: "none",color:"white"}}>
-                    Login
+                    <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
+                      Login
                     </Link>
                   )}
                 </div>
-                
               </div>
             </div>
           </div>
