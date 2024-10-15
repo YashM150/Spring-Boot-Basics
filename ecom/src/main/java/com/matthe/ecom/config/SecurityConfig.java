@@ -32,7 +32,8 @@ public class SecurityConfig {
                                 "/api/auth/session",
                                 "/api/product/*",
                                 "/api/product/*/image").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Allow Swagger endpoints
+                        .requestMatchers("/save-openapi").permitAll()
+                        .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Allow Swagger endpoints
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
                 .sessionManagement(session -> session
