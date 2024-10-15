@@ -20,33 +20,28 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection for stateless APIs
-                .cors(cors -> {})
+                .cors(cors -> {}) // Enable CORS
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/register").permitAll()  // Allow registration
-                        .requestMatchers("/api/auth/register/user").permitAll()  // Allow User registration
-                        .requestMatchers("/api/auth/register/admin").permitAll()  // Allow User registration
-                        .requestMatchers("/api/auth/login").permitAll()     // Allow login
-                        .requestMatchers("/api/auth/logout").permitAll()
-                        .requestMatchers("/api/auth/user").permitAll()
-                        .requestMatchers("/api/products").permitAll()
-                        .requestMatchers("/api/auth/session").permitAll()
-                        .requestMatchers("/api/product/*").permitAll()
-                        .requestMatchers("/api/product/*/image").permitAll()
-                        .anyRequest().authenticated()                          // Secure all other endpoints
+                        .requestMatchers("/api/auth/register",
+                                "/api/auth/register/user",
+                                "/api/auth/register/admin",
+                                "/api/auth/login",
+                                "/api/auth/logout",
+                                "/api/auth/user",
+                                "/api/products",
+                                "/api/auth/session",
+                                "/api/product/*",
+                                "/api/product/*/image").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Allow Swagger endpoints
+                        .anyRequest().authenticated() // Secure all other endpoints
                 )
                 .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Create a session if required
-                .invalidSessionUrl("/api/auth/login")  // Redirect to login if session is invalid
-            );
-             
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // Create a session if required
+                        .invalidSessionUrl("/api/auth/login")  // Redirect to login if session is invalid
+                );
 
         return http.build();
     }
-
-//    @Bean
-//    public CustomAuthenticationFilter customAuthenticationFilter() {
-//        return new CustomAuthenticationFilter();
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

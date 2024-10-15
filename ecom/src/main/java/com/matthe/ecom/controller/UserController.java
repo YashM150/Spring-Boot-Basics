@@ -2,6 +2,8 @@ package com.matthe.ecom.controller;
 
 import com.matthe.ecom.model.User;
 import com.matthe.ecom.service.UserDetailService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ public class UserController {
     }
 
     @PostMapping("/register/user")
+    @Operation(summary = "Register a user", description = "Register a user and return the login statusRegister as user.")
+    @ApiResponse(responseCode = "200", description = "Registered successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User user1 = userService.registerUser(user,"ROLE_USER", null);
@@ -29,6 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/register/admin")
+    @Operation(summary = "Register a admin", description = "Authenticate a user and return the login statusRegister as admin.")
+    @ApiResponse(responseCode = "200", description = "Registered successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> registerAdmin(@RequestBody User user,@RequestParam("code") String code) {
         try {
             User user1 = userService.registerUser(user,"ROLE_ADMIN",code);
@@ -39,6 +47,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Login a user", description = "Authenticate a user and return the login status.")
+    @ApiResponse(responseCode = "200", description = "Logged in successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> login(@RequestBody User user) {
         String Status="LoggedIn";
         boolean authenticated = userService.authenticateUser(user.getUsername(), user.getPassword());
@@ -55,6 +66,9 @@ public class UserController {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Logout a user", description = "logout a user.")
+    @ApiResponse(responseCode = "200", description = "Logged out successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> logout(@RequestParam("User") String username) {
         try {
             // Check the current session status
@@ -83,6 +97,9 @@ public class UserController {
     }
 
     @GetMapping("/session")
+    @Operation(summary = "Check for the session", description = "Check for the statusRegister.")
+    @ApiResponse(responseCode = "200", description = "Api hit successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> checkSession(@RequestParam("User") String username) {
         String session= userService.checkSession(username);
         if(Objects.equals(session, "LoggedIn"))
@@ -96,6 +113,9 @@ public class UserController {
     }
 
     @GetMapping("/user")
+    @Operation(summary = "Check for admin", description = "check for a admin.")
+    @ApiResponse(responseCode = "200", description = "Api hit successfully")
+    @ApiResponse(responseCode = "401", description = "Invalid credentials")
     public ResponseEntity<?> checkUser(@RequestParam("User") String username) {
         boolean User=userService.isAdmin(username);
         if(User==true)
