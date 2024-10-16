@@ -24,7 +24,7 @@ This is a full-stack eCommerce web application that allows users to browse produ
 - **Backend:**
   - Java
   - Spring Boot
-  - MongoDB (or MySQL)
+  - MySQL
   - Spring Security with JWT
 - **Frontend:**
   - React.js (with Vite)
@@ -105,7 +105,7 @@ The frontend is built with React.js (Vite) and is organized as:
    ```bash
    npm run dev
    ```
-4. The frontend will run on `http://localhost:3000`.
+4. The frontend will run on `http://localhost:5173`.
 
 ---
 
