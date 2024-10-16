@@ -1,7 +1,5 @@
 # E-Commerce Application
 
-This is a full-stack eCommerce web application that allows users to browse products, add items to their cart, and proceed with checkout. Admins can add, update, and delete products. The application also features user authentication and dark mode support.
-
 ## Table of Contents
 
 - [Technologies Used](#technologies-used)
