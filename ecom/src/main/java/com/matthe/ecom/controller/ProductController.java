@@ -2,6 +2,8 @@ package com.matthe.ecom.controller;
 
 import com.matthe.ecom.model.Product;
 import com.matthe.ecom.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,11 +28,17 @@ public class ProductController {
     }
 
     @GetMapping("/products")
+    @Operation(summary = "Get all Products", description = "Get description of all the products")
+    @ApiResponse(responseCode = "200", description = "Got all products successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<List<Product>> getallProducts(){
     return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/product/{id}")
+    @Operation(summary = "Get a product", description = "Get a particular product")
+    @ApiResponse(responseCode = "200", description = "got a product successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<Product> getProduct(@PathVariable int id){
         Product product = productService.getProductById(id);
         if(product!=null){
@@ -42,6 +50,9 @@ public class ProductController {
     }
 
     @PostMapping("/product")
+    @Operation(summary = "Add a product", description = "Add a product")
+    @ApiResponse(responseCode = "200", description = "Added a product successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<?> addProduct(@RequestPart Product product,
                                         @RequestPart MultipartFile imageFile){
         try{
@@ -54,6 +65,9 @@ public class ProductController {
     }
 
     @GetMapping("/product/{productId}/image")
+    @Operation(summary = "Get product image", description = "Get a particular product's image")
+    @ApiResponse(responseCode = "200", description = "Got image successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<byte[]> getImageByProductId(@PathVariable int productId){
         Product product = productService.getProductById(productId);
         byte[] imageFile = product.getImageData();
@@ -65,6 +79,9 @@ public class ProductController {
     }
 
     @PutMapping("/product/{id}")
+    @Operation(summary = "Update a product", description = "Update a particular product")
+    @ApiResponse(responseCode = "200", description = "Updated successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestPart Product product,@RequestPart MultipartFile imageFile){
         Product product1 = null;
         try{
@@ -82,6 +99,9 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/{id}")
+    @Operation(summary = "Delete a product", description = "Delete a particular product")
+    @ApiResponse(responseCode = "200", description = "Deleted successfully")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<String> deleteProduct(@PathVariable int id){
         Product product= productService.getProductById(id);
         if(product!=null){
