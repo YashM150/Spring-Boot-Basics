@@ -1,7 +1,3 @@
-To create a `README.md` file for your eCommerce project with the structure shown in the images, here is a sample structure:
-
----
-
 # E-Commerce Application
 
 This is a full-stack eCommerce web application that allows users to browse products, add items to their cart, and proceed with checkout. Admins can add, update, and delete products. The application also features user authentication and dark mode support.
@@ -139,6 +135,3 @@ The application has two types of users:
   - `POST /api/cart`: Adds items to the cart.
   - `POST /api/cart/checkout`: Proceeds to checkout.
 
----
-
-Feel free to customize this structure based on additional features or components you've implemented in your application!
